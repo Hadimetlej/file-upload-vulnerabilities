@@ -1,37 +1,38 @@
-# 🔐 IDOR - Trip Access Vulnerability
+# 📁 File Upload Security Assessment
 
-This repository documents a real-world Insecure Direct Object Reference (IDOR) vulnerability discovered during authorized security testing.
+This repository documents a file upload functionality assessment conducted during authorized security testing.
 
-The application fails to properly enforce access control on trip resources, allowing an attacker to access another user's trip by reusing or modifying the trip identifier.
+The application allows users to upload files which are stored in an S3 bucket and served as static content. Testing confirmed that uploaded PHP files are not executed on the server.
 
 ---
 
-## 📌 Key Issue
+## 📌 Key Findings
 
-- Missing authorization validation on backend
-- Direct access to sensitive resources via predictable IDs
-- No ownership check before returning data
+- File upload functionality is accessible through user input (e.g., feedback feature)
+- Uploaded files are stored and publicly retrievable
+- Server correctly prevents execution of uploaded scripts
 
 ---
 
 ## ⚠️ Impact
 
-- Unauthorized access to user data
-- Privacy violation
-- Horizontal privilege escalation
+- No Remote Code Execution (RCE)
+- Potential storage abuse (spam / large uploads)
+- Possible misuse of public file hosting
 
 ---
 
 ## 🛠️ Root Cause
 
-- Weak access control implementation
-- Trusting user-supplied identifiers
-- Lack of server-side authorization checks
+- Lack of upload restrictions (size/type limits)
+- Public access to uploaded files
+- Missing abuse prevention mechanisms
 
 ---
 
 ## ✅ Recommendation
 
-- Validate resource ownership on every request
-- Implement proper access control mechanisms (RBAC / ABAC)
-- Return 403 for unauthorized access attempts
+- Enforce strict file type and size validation
+- Implement rate limiting for upload endpoints
+- Monitor and restrict public access where necessary
+- Add abuse detection mechanisms
